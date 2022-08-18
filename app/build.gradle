@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    compileSdkVersion 32
+    compileSdkVersion  32
 //    buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.plcoding.retrofitcrashcourse"
+        applicationId "com.example.mytesting"
         minSdkVersion 21
         targetSdkVersion 32
         versionCode 1
@@ -61,7 +61,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     def coroutine_version = "1.6.0"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"
@@ -69,3 +69,15 @@ dependencies {
 
 
 }
+
+tasks.whenTaskAdded { t->
+    if(t.name == "processDebugAndroidTestManifest"){
+        t.enabled = false
+    }
+}
+/*afterEvaluate {
+    processDebugAndroidTestManifest = false
+}*/
+
+
+

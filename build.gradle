@@ -14,3 +14,22 @@ plugins {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+task("myconfig") {
+    doLast{
+
+        for( task in getAllTasks(true)){
+            for(task1 in task.value){
+                println " $task1 in  ${task.key} "
+            }
+        }
+        for( prop in properties){
+            println " property = $prop"
+        }
+        for( task in tasks){
+            println " $task"
+        }
+
+    }
+}
+
