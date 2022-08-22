@@ -1,15 +1,33 @@
 package com.example.mytesting
 
+import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.AlarmClock
+import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.runtime.Composable
+import androidx.compose.material.Text
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat.startActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import coil.compose.rememberAsyncImagePainter
 import com.example.mytesting.ui.theme.MyTestingTheme
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,70 +39,34 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    Testing("Android")
+                    GetContentExample()
                 }
             }
         }
     }
-}
 
-val TAG = "mytestingDebug"
-@Composable
-fun Testing(name: String) {
-
-    val test = classImpl()
-
-    println("test interface is ${test.test} ${test.hello}")
-    val p : parentInterface = test
-    println(" parrent interface is ${p.s}  ")
-    lateinit var prefs: Prefs
-    prefs= Prefs(0f,0,0,0,MutableList(5){"1"})
-    prefs.history.forEachIndexed { index, s ->
-        println("$index $s")}
-    prefs = Prefs(0f,0,0,0,MutableList(6){"2"})
-    prefs.history.forEachIndexed { index, s ->
-        println("$index $s")}
-}
-
-data class Prefs (
-    val level: Float,
-    val rows: Int,
-    val cols : Int,
-    val historyLast: Int,
-    val history: MutableList<String>
-)
-
-interface parentInterface {
-    val s: String
-    get() = "parent"
-}
-interface MyInterface : parentInterface {
-
-    val test: Int
-
-    fun foo() : String
-
-    val hello : String
-        get() = "Hello there, pal!"
-}
-
-fun classImpl() : MyInterface{
-    return object : MyInterface {
-        override val test: Int
-            get() = 5
-
-        override fun foo(): String {
-            return "lol"
-        }
 
     }
-}
 
-
-@Preview(showBackground = true)
 @Composable
-fun DefaultPreview() {
-    MyTestingTheme {
-        Testing("Android")
+fun GetContentExample() {
+
+
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        imageUri = uri
+    }
+    Column {
+        Button(onClick = { launcher.launch("image/*") }) {
+            Text(text = "Load Image")
+        }
+        Button(onClick = { launcher.launch("*/*") }) {
+            Text(text = "open file")
+        }
+        Image(
+            painter = rememberAsyncImagePainter(imageUri),
+            contentDescription = "My Image"
+        )
+
     }
 }
