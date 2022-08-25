@@ -69,31 +69,7 @@ dependencies {
     def coroutine_version = "1.6.0"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
-    implementation ("io.coil-kt:coil-compose:2.2.0")/* {
-        exclude group:"androidx.lifecycle", module: "lifecycle-runtime"
-    }*/
-
-    constraints{
-
-        implementation("androidx.lifecycle:lifecycle-viewmodel") {
-            version{
-            strictly '2.5.0'
-            }
-            because """
-            Duplicate class androidx.lifecycle.ViewModelLazy found in modules lifecycle-viewmodel-2.5.0-runtime (androidx.lifecycle:lifecycle-viewmodel:2.5.0) and lifecyc
-            le-viewmodel-ktx-2.3.1-runtime (androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1)
-            """
-        }
-        implementation("androidx.lifecycle:lifecycle-viewmodel-ktx") {
-            version{
-                strictly '2.5.0'
-            }
-            because """
-            Duplicate class androidx.lifecycle.ViewModelLazy found in modules lifecycle-viewmodel-2.5.0-runtime (androidx.lifecycle:lifecycle-viewmodel:2.5.0) and lifecyc
-            le-viewmodel-ktx-2.3.1-runtime (androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1)
-            """
-        }
-    }
+    implementation "com.google.accompanist:accompanist-permissions:0.21.1-beta"
 
 
 }

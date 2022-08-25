@@ -1,35 +1,29 @@
 package com.example.mytesting
 
+import android.Manifest
 import android.annotation.SuppressLint
-import android.content.ActivityNotFoundException
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.provider.AlarmClock
-import android.util.Log
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import coil.compose.rememberAsyncImagePainter
 import com.example.mytesting.ui.theme.MyTestingTheme
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.MultiplePermissionsState
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+    @SuppressLint("CoroutineCreationDuringComposition")
+    @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -39,7 +33,18 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    GetContentExample()
+                    val permissionsState = rememberMultiplePermissionsState(
+                        permissions = listOf(
+                            Manifest.permission.RECORD_AUDIO,
+                            Manifest.permission.CAMERA
+                        )
+                    )
+                    lifecycleScope.launch {
+                        repeatOnLifecycle(Lifecycle.State.STARTED){
+                            permissionsState.launchMultiplePermissionRequest()
+                        }
+                    }
+                    GetContentExample(permissionsState)
                 }
             }
         }
@@ -48,25 +53,35 @@ class MainActivity : ComponentActivity() {
 
     }
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun GetContentExample() {
+fun GetContentExample(state: MultiplePermissionsState) {
 
+    Column(
+        modifier= Modifier
+            .fillMaxSize()
+    ){
+        state.permissions.forEach { perm->
+            when(perm.permission){
+                Manifest.permission.CAMERA -> {
+                    when {
+                        perm.hasPermission -> Text("Camera permission accepted")
+                        perm.permissionRequested -> Text("Camera permission requested before")
+                        else -> Text("Camera permission denied permanently")
+                    }
+                }
+                Manifest.permission.RECORD_AUDIO ->{
+                    when {
+                    perm.hasPermission -> Text("recrod audio permission accepted")
+                    perm.permissionRequested -> Text("record audio permission requested before")
+                    else -> {
+                        Text("record audio permission denied permanently")
+                    }
+                    }
 
-    var imageUri by remember { mutableStateOf<Uri?>(null) }
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        imageUri = uri
-    }
-    Column {
-        Button(onClick = { launcher.launch("image/*") }) {
-            Text(text = "Load Image")
+                }
+            }
         }
-        Button(onClick = { launcher.launch("*/*") }) {
-            Text(text = "open file")
-        }
-        Image(
-            painter = rememberAsyncImagePainter(imageUri),
-            contentDescription = "My Image"
-        )
-
     }
+
 }
