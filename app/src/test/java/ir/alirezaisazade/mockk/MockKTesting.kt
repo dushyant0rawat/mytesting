@@ -20,7 +20,7 @@ class MockKTesting {
         val mockUser = mockk<User>()
         every { mockUser.name } returns "alireza"
         val anme = mockUser.name
-        verify { mockUser.name }
+        verify  { mockUser.name }
     }
 
     @Test
@@ -71,12 +71,14 @@ class MockKTesting {
         mock.setSpeed(20)
         mock.setSpeed(80)
         //verifies that given methods are all and only all the methods that were called note more not less
-        io.mockk.verifyAll {
+        verifyAll {
             mock.setSpeed(10)
             mock.setSpeed(20)
             mock.setSpeed(80)
         }
     }
+
+
 
     @Test
     fun verifyOrder() {
