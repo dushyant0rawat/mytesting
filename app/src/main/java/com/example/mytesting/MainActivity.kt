@@ -11,8 +11,11 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.AbstractSavedStateViewModelFactory
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.savedstate.SavedStateRegistryOwner
 import com.example.mytesting.ui.theme.MyTestingTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -23,12 +26,29 @@ import kotlin.reflect.KProperty
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val mfactory = object : ViewModelProvider.Factory{
+       /* val mfactory = object : ViewModelProvider.Factory{
             override fun <T : ViewModel?> create(modelClass: Class<T>) : T {
-                return MainActivityViewModel(0,"")  as T
+                return MainActivityViewModel(0,"",savedInstanceState)  as T
             }
+        }   */
+        class mfactory(
+           owner: SavedStateRegistryOwner,
+           defaultArgs: Bundle? = null)
+           : AbstractSavedStateViewModelFactory(owner, defaultArgs){
+           override fun <T : ViewModel?> create(
+               key: String,
+               modelClass: Class<T>,
+               handle: SavedStateHandle,
+           ): T {
+               return MainActivityViewModel(0,"",handle) as T
+           }
+           /* override fun <T : ViewModel?> create(modelClass: Class<T>) : T {
+            return MainActivityViewModel(0,"",savedInstanceState)  as T
+        }*/
         }
-        val viewmodel  : MainActivityViewModel by viewModels{mfactory}
+        val viewmodel  : MainActivityViewModel by viewModels{
+            mfactory(this,intent.extras)
+        }
         println("viewmodel num = ${viewmodel.num}")
         setContent {
             MyTestingTheme {
