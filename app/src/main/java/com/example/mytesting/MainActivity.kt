@@ -1,6 +1,7 @@
 package com.example.mytesting
 
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,6 +12,7 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -24,6 +26,7 @@ import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
 class MainActivity : ComponentActivity() {
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
        /* val mfactory = object : ViewModelProvider.Factory{
@@ -49,7 +52,10 @@ class MainActivity : ComponentActivity() {
         val viewmodel  : MainActivityViewModel by viewModels{
             mfactory(this,intent.extras)
         }
-        println("viewmodel num = ${viewmodel.num}")
+//        val viewmodel  : MainActivityViewModel by viewModels()
+
+        println("viewmodel num = ${viewmodel}")
+        viewmodel.changeVmInt()
         setContent {
             MyTestingTheme {
                 // A surface container using the 'background' color from the theme
@@ -62,6 +68,16 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        Log.d(TAG, "onSaveInstanceState: one parm")
+    }
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        Log.d(TAG, "onRestoreInstanceState: ")
+    }
+
 }
 
 val TAG = "mytestingDebug"
@@ -90,7 +106,9 @@ fun Testing(name: String) {
     val par2 = parent2()
     val par3 = parent3()
     returnNothing("this is reified string")
+
     val repo1: repo by repoiml1()
+    repo1.getallvalues()
     val typeofclass = fun(par: parent){
     when(par){
          is parent1 -> {
@@ -214,12 +232,16 @@ interface repo {
 // nothing is subtype of all classes
 // and any is super of all classes
 //TODO why Nothing? worked but not Nothing and Any
+// nothing? is the reference because repoiml1 is called from a global function
+// where there is this reference
 class repoiml1 : ReadOnlyProperty<Nothing?, repo> {
 
     init{
-        println("I am implementation of repo")
+        Log.d(TAG, ":I am implementation of repo " +
+                "${repo::class.java}   ")
     }
     override operator fun getValue(thisref: Nothing?, property: KProperty<*>): repo {
+        Log.d(TAG, "getValue: ${property.name}")
         return object : repo {
             override fun getallvalues(){
 
@@ -229,6 +251,7 @@ class repoiml1 : ReadOnlyProperty<Nothing?, repo> {
             }
         }
     }
+
 }
 
 class OuterClass {
