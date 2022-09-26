@@ -1,4 +1,4 @@
-package ir.alirezaisazade.mockk
+package com.example.mytesting
 
 import io.mockk.*
 import org.hamcrest.core.IsCollectionContaining.hasItem

@@ -1,4 +1,4 @@
-package ir.alirezaisazade.mockk
+package com.example.mytesting
 
 class Car(private val driverId: String) {
 

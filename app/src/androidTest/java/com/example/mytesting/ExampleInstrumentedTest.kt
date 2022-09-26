@@ -1,4 +1,4 @@
-package ir.alirezaisazade.mockk
+package com.example.mytesting
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4

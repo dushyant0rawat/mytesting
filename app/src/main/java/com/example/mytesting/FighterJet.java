@@ -1,4 +1,4 @@
-package ir.alirezaisazade.mockk;
+package com.example.mytesting;
 
 public class FighterJet {
 

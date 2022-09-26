@@ -1,4 +1,4 @@
-package ir.alirezaisazade.mockk
+package com.example.mytesting
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
