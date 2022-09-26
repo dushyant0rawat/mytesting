@@ -17,7 +17,7 @@ class MainActivityViewModel(val num: Int, val str : String,private val state : S
         Log.d(TAG, ": save state handle is ${state.get<Int>("test")}")
     }
 
-    private var vmInt: Int = 0
+    private var vmInt: Int =0
         set(value){
             field= value
             state.set("test",value)

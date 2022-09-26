@@ -54,8 +54,8 @@ class MainActivity : ComponentActivity() {
         }
 //        val viewmodel  : MainActivityViewModel by viewModels()
 
-        println("viewmodel num = ${viewmodel}")
-        viewmodel.changeVmInt()
+//        println("viewmodel num = ${viewmodel.num}")
+
         setContent {
             MyTestingTheme {
                 // A surface container using the 'background' color from the theme
@@ -64,6 +64,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background
                 ) {
                     Testing("Android")
+                    viewmodel.changeVmInt()
                 }
             }
         }
@@ -71,11 +72,12 @@ class MainActivity : ComponentActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
+        outState.putInt("test",5)
         Log.d(TAG, "onSaveInstanceState: one parm")
     }
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        Log.d(TAG, "onRestoreInstanceState: ")
+        Log.d(TAG, "onRestoreInstanceState: ${savedInstanceState.get("test")}")
     }
 
 }
