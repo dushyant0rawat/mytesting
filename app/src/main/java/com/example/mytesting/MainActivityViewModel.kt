@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModel
  * is null
  */
 class MainActivityViewModel(val num: Int, val str : String,private val state : SavedStateHandle) : ViewModel() {
-
+    var mInt = 0
     init{
         Log.d(TAG, ": save state handle is ${state.get<Int>("test")}")
     }
@@ -26,5 +26,8 @@ class MainActivityViewModel(val num: Int, val str : String,private val state : S
     fun changeVmInt() {
         vmInt = 2
         Log.d(TAG, "changeVmInt: $vmInt")
+    }
+    fun greet(){
+        println("")
     }
 }

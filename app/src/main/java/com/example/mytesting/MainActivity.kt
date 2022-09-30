@@ -1,7 +1,6 @@
 package com.example.mytesting
 
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,19 +11,18 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.savedstate.SavedStateRegistryOwner
 import com.example.mytesting.ui.theme.MyTestingTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
+val gInt = 0
+fun greet(){}
 class MainActivity : ComponentActivity() {
     
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,7 +53,31 @@ class MainActivity : ComponentActivity() {
 //        val viewmodel  : MainActivityViewModel by viewModels()
 
 //        println("viewmodel num = ${viewmodel.num}")
+        /**
+         * comment kotlin reflection and use java reflection because using kotlin reflection
+         * requires dependency
+         */
+        val kclz = this::class
+        val clz = kclz.java
 
+/*        Log.d(TAG, "onCreate: simple ${kclz.simpleName} " +
+                "parameters ${kclz.typeParameters} ${kclz.java}")
+        for( constructor in kclz.constructors){
+            Log.d(TAG, "onCreate:  constructor is $constructor")
+        }*/
+        for( constructor in clz.constructors){
+            Log.d(TAG, "onCreate:  constructor is $constructor")
+        }
+        for( constructor in clz.declaredConstructors){
+            Log.d(TAG, "onCreate:  declared constructor is $constructor")
+        }
+        Log.d(TAG, "onCreate: canonical name ${clz.canonicalName} " )
+        val kprop0 = ::gInt
+        val kprop1 = MainActivityViewModel::num
+        MainActivityViewModel::mInt.set(viewmodel,2)
+        val kfun0 = ::greet
+        val kfun1 = MainActivityViewModel::greet
+        Log.d(TAG, "onCreate: $kprop0 $kprop1 $kfun0 $kfun1")
         setContent {
             MyTestingTheme {
                 // A surface container using the 'background' color from the theme
@@ -100,11 +122,11 @@ fun Testing(name: String) {
 
     // creating object of the Nested class
     val obj = OuterClass.NestedClass()
-    println(obj.nStr)
-    println(obj.demo())
+    Log.d(TAG, "Testing: obj.nStr")
+    Log.d(TAG, "Testing: obj.demo()")
 
-    val par = parent()
-    val par1 = parent1()
+    var par = parent()
+    var par1 = parent1()
     val par2 = parent2()
     val par3 = parent3()
     returnNothing("this is reified string")
@@ -129,23 +151,26 @@ fun Testing(name: String) {
     Log.d(TAG," type of class par1 is ${typeofclass(par1)}")
     Log.d(TAG," type of class par2 is ${typeofclass(par2)}")
     Log.d(TAG," type of class par3 is ${typeofclass(par3)}")
+   /* class cast exception, can't cast downcast
+   par1 = par as parent1*/
+    par1.parent1Fun()
     val test = classImpl()
 
-    println("test interface is ${test.test} ${test.hello}" +
+    Log.d(TAG, "test interface is ${test.test} ${test.hello}" +
             " 1: ${test.ext1()}" +
             " 2: ${test.ext2()}  " +
             "3 : ${test.ext3()}  " +
             "T: $test " +
             "s: ${test.ext1}")
     val p : parentInterface = test
-    println(" parrent interface is ${p.s}  ")
+    Log.d(TAG, "Testing:  parrent interface is ${p.s}  ")
     lateinit var prefs: Prefs
     prefs= Prefs(0f,0,0,0,MutableList(5){"1"})
     prefs.history.forEachIndexed { index, s ->
-        println("$index $s")}
+        Log.d(TAG, "Testing: $index $s")}
     prefs = Prefs(0f,0,0,0,MutableList(6){"2"})
     prefs.history.forEachIndexed { index, s ->
-        println("$index $s")}
+        Log.d(TAG, "Testing: $index $s")}
     val list1 = List(5){0}
     customPrint(list1)
     val list2 = List(5){0f}
@@ -155,15 +180,40 @@ fun Testing(name: String) {
 }
 
 inline fun <reified T>  customPrint(list : List<T>){
-    println("list of type is ${T::class.java}")
-    println("list of type is $list")
+    Log.d(TAG, "customPrint: list of type is ${T::class.java}" +
+            "list of type is $list")
 
 }
-open class parent {}
+open class parent {
+    open fun parentFun(){
+        Log.d(TAG, "parentFun: parent")
+    }
+}
 
-class parent1 : parent() {}
-class parent2 : parent(){}
-class parent3 : parent(){}
+class parent1 : parent() {
+    override fun parentFun() {
+        Log.d(TAG, "parentFun: parent1 ")
+    }
+    fun parent1Fun(){
+        Log.d(TAG, "parent1Fun: parent1")
+    }
+}
+class parent2 : parent(){
+    override fun parentFun() {
+        Log.d(TAG, "parentFun: parent2 ")
+    }
+    fun parent2Fun(){
+        Log.d(TAG, "parent1Fun: parent2")
+    }
+}
+class parent3 : parent(){
+    override fun parentFun() {
+        Log.d(TAG, "parentFun: parent3 ")
+    }
+    fun parent3Fun(){
+        Log.d(TAG, "parent1Fun: parent3")
+    }
+}
 
 data class Prefs (
     val level: Float,
@@ -220,7 +270,7 @@ fun classImpl() : MyInterface{
 
 inline fun <reified T>returnNothing(value: T) {
 //    throw Throwable("This is return Nothing")
-    println("this is nothing ${T::class.simpleName}" +
+    Log.d(TAG, "returnNothing: this is nothing ${T::class.simpleName}" +
             "   =  ${T::class.java}")
  val list : Flow<Int> = flow{
 
@@ -237,11 +287,11 @@ interface repo {
 // nothing? is the reference because repoiml1 is called from a global function
 // where there is this reference
 class repoiml1 : ReadOnlyProperty<Nothing?, repo> {
-
     init{
         Log.d(TAG, ":I am implementation of repo " +
                 "${repo::class.java}   ")
     }
+
     override operator fun getValue(thisref: Nothing?, property: KProperty<*>): repo {
         Log.d(TAG, "getValue: ${property.name}")
         return object : repo {
@@ -273,11 +323,11 @@ inline fun <reified T> returnSomething() {
     println(T::class.java)
 }
 fun print(value : Any){
-    println("${value.javaClass}")
+    Log.d(TAG, "print: ${value.javaClass}")
     when(value){
-        is Integer -> println("this is integer")
-        is Float -> println("this is Float")
-        is String -> println("this is  String")
+        is Integer -> Log.d(TAG, "print: this is integer")
+        is Float -> Log.d(TAG, "print: this is Float")
+        is String -> Log.d(TAG, "print: this is  String")
 //        else  -> println("this is Any")
     }
 }
