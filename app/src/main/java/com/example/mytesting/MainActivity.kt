@@ -61,22 +61,32 @@ fun GetContentExample(state: MultiplePermissionsState) {
         modifier= Modifier
             .fillMaxSize()
     ){
+        /*perm.permissionRequested is always false
+        * rationale is
+        * 1) false before first time time before don't ask dialogue
+        * 2) true  when don't ask dialogue appears and permission is denied without dont ask again
+        * 3) false when denied with don't ask again
+        * permanentley denied condition could also be !perm.hasPermission && perm.shouldShowRationale*/
         state.permissions.forEach { perm->
+            Text("permission: ${perm.permission} \n rationale: ${perm.shouldShowRationale}\n" +
+                    "haspermission: ${perm.hasPermission} \n permissionrequested: ${perm.permissionRequested}")
             when(perm.permission){
                 Manifest.permission.CAMERA -> {
+
                     when {
-                        perm.hasPermission -> Text("Camera permission accepted")
+                        perm.hasPermission -> Text("Camera permission granted")
                         perm.permissionRequested -> Text("Camera permission requested before")
-                        else -> Text("Camera permission denied permanently")
+                        perm.shouldShowRationale -> Text("Camera rationale true")
+                        else-> Text("Camera permission denied permanently")
                     }
                 }
                 Manifest.permission.RECORD_AUDIO ->{
                     when {
-                    perm.hasPermission -> Text("recrod audio permission accepted")
-                    perm.permissionRequested -> Text("record audio permission requested before")
-                    else -> {
-                        Text("record audio permission denied permanently")
-                    }
+                        perm.hasPermission -> Text("audio permission granted")
+                        perm.permissionRequested -> Text("record audio permission requested before")
+                        perm.shouldShowRationale -> Text("Audio rationale true")
+                        else-> Text("audio permission denied permanently")
+
                     }
 
                 }
