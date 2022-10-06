@@ -1,13 +1,11 @@
-package com.ezatpanah.deeplink_navigationcomponent_youtube
+package com.example.mytesting
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.fragment.findNavController
-import com.ezatpanah.deeplink_navigationcomponent_youtube.databinding.FragmentMainBinding
-import com.ezatpanah.deeplink_navigationcomponent_youtube.databinding.FragmentProductBinding
+import com.example.mytesting.databinding.FragmentMainBinding
 
 
 class MainFragment : Fragment() {

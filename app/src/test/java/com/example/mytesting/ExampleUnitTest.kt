@@ -1,4 +1,4 @@
-package com.ezatpanah.deeplink_navigationcomponent_youtube
+package com.example.mytesting
 
 import org.junit.Test
 

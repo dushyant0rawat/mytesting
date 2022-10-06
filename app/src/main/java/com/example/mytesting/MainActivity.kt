@@ -1,8 +1,8 @@
-package com.ezatpanah.deeplink_navigationcomponent_youtube
+package com.example.mytesting
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.ezatpanah.deeplink_navigationcomponent_youtube.databinding.ActivityMainBinding
+import com.example.mytesting.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding

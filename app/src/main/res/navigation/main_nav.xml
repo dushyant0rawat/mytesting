@@ -6,7 +6,7 @@
     app:startDestination="@id/mainFragment">
     <fragment
         android:id="@+id/productFragment"
-        android:name="com.ezatpanah.deeplink_navigationcomponent_youtube.ProductFragment"
+        android:name="com.example.mytesting.ProductFragment"
         android:label="fragment_product"
         tools:layout="@layout/fragment_product">
         <argument android:name="productName" />
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.ezatpanah.deeplink_navigationcomponent_youtube.MainFragment"
+        android:name="com.example.mytesting.MainFragment"
         android:label="fragment_main"
         tools:layout="@layout/fragment_main" >
         <action
