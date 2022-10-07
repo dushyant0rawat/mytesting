@@ -12,7 +12,7 @@
         <argument android:name="productName" />
         <deepLink
             android:id="@+id/deepLink2"
-            app:uri="androidgeek.co/product/{productName}" />
+            app:uri="com.example.com/product/{productName}" />
     </fragment>
     <fragment
         android:id="@+id/mainFragment"
